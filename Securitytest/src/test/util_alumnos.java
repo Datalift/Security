@@ -1,0 +1,101 @@
+package test;
+import java.io.*;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author David Nuñez <dnunez (at) lcc.uma.es> y Cristina Alcaraz <alcaraz (at) lcc.uma.es
+ */
+public class util_alumnos {
+
+    public static String bytesToString(byte[] b) {
+        try {
+            return new String(b, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(util_alumnos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public static byte[] stringToBytes(String s) {
+        return s.getBytes();
+    }
+    
+    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    
+    public static String bytesToHexString(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for (int j = 0; j < bytes.length; j++) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    public static byte[] hexStringToBytes(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i + 1), 16));
+        }
+        return data;
+    }
+    
+    /**
+     * Cambia el bit i-ésimo del byte b
+     * @param b
+     * @param i
+     * @return 
+     */
+    public static byte cambiarBit(byte b, int i){
+        return (byte) (b ^ ((0x80) >>> i));
+    }
+    
+    public static int contarDiferencias(byte a, byte b){
+        return 0;
+    }
+    
+    public static byte[] xor(byte[] x, byte[] y){
+        int min = Math.min(x.length, y.length);
+        byte[] z = new byte[min];
+        for(int i=0; i<min; i++){
+            z[i] = (byte) (x[i] ^ y[i]);
+        }
+        return z;
+    }
+    
+    /**
+     * Cambia el bit i-ésimo del byte b
+     * @param b
+     * @param i
+     * @return 
+     */
+    public static int contarBitsDiferentes(byte b, byte c){
+        return Integer.bitCount((b ^ c) & 0xFF);
+    }
+    
+	public static int contarBitsDiferentes(byte[] a, byte[] b){
+		if(a.length!=b.length) return -1;
+		
+		int cont = 0;
+		for(int i=0; i<a.length; i++){
+			cont += util_alumnos.contarBitsDiferentes(a[i], b[i]);
+		}
+		return cont;
+	}
+    
+    public static byte[] concatenateByteArrays(byte[] a, byte[] b) {
+	    byte[] result = new byte[a.length + b.length]; 
+	    System.arraycopy(a, 0, result, 0, a.length); 
+	    System.arraycopy(b, 0, result, a.length, b.length); 
+	    return result;
+	}
+    
+    public static byte[] doHash(byte[] encryptedM, int TAM_BLOQUE_BYTES){
+		return Arrays.copyOfRange(encryptedM, encryptedM.length-TAM_BLOQUE_BYTES, encryptedM.length);
+	}	
+}
